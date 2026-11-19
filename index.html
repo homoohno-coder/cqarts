@@ -1,0 +1,385 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="referrer" content="no-referrer">
+<title>Christina Quarles — design study</title>
+<meta name="description" content="An unofficial design study for Christina Quarles: a flyover of the work that resolves into a single painting.">
+<meta name="robots" content="noindex,nofollow">
+<style>
+:root{--bg:#181513;--ink:#1d1a17;--rust:#b5532a;--hero:none}
+*{box-sizing:border-box;margin:0;padding:0}
+html,body{height:100%;overflow:hidden;background:var(--bg)}
+body{font-family:'Iowan Old Style','Palatino Linotype',Georgia,serif;color:var(--ink)}
+#frame{position:fixed;overflow:hidden;background:var(--bg)}
+#stage{position:absolute;inset:0;perspective:900px;perspective-origin:50% 38%;overflow:hidden}
+#plane{position:absolute;left:50%;top:50%;transform-origin:50% 0;transform-style:preserve-3d;will-change:transform}
+#decor{position:absolute;left:0;top:0}
+#heroes{position:absolute;inset:0;transform-style:preserve-3d}
+#fog{position:absolute;inset:0;pointer-events:none;background:linear-gradient(var(--bg) 0%,transparent 48%)}
+
+.box{position:absolute;left:0;top:0;display:block;width:var(--w);height:var(--h);transform-style:preserve-3d;color:inherit;text-decoration:none;pointer-events:none;will-change:transform}
+.sd{position:absolute;display:block;backface-visibility:hidden;background:var(--sc,#2a2622)}
+.sl{left:calc(var(--d)/-2);top:0;width:var(--d);height:var(--h);transform:translateZ(calc(var(--d)/2)) rotateY(-90deg);filter:brightness(1.35)}
+.sr{left:calc(var(--w) - var(--d)/2);top:0;width:var(--d);height:var(--h);transform:translateZ(calc(var(--d)/2)) rotateY(90deg);filter:brightness(.7)}
+.st{left:0;top:calc(var(--d)/-2);width:var(--w);height:var(--d);transform:translateZ(calc(var(--d)/2)) rotateX(90deg);filter:brightness(1.5)}
+.sb{left:0;top:calc(var(--h) - var(--d)/2);width:var(--w);height:var(--d);transform:translateZ(calc(var(--d)/2)) rotateX(-90deg);filter:brightness(.55)}
+.fr{position:absolute;inset:0;background:var(--fc,#34302b);transform:translateZ(var(--d));overflow:hidden}
+.fr::after{content:"";position:absolute;inset:0;border:2px solid rgba(255,236,214,calc(var(--e,0)));pointer-events:none}
+.m{position:absolute;inset:0}
+.m canvas,.m img{width:100%;height:100%;object-fit:cover;display:block}
+.hs{position:absolute;background-image:var(--hero);background-size:cover;background-position:var(--heroPos,center);pointer-events:none}
+.live .box.filled{pointer-events:auto}
+.live .box.filled:hover .fr{filter:brightness(1.07);box-shadow:inset 0 0 0 2px rgba(255,255,255,.75)}
+.live .box.ev{cursor:pointer}
+.cap{position:absolute;left:0;right:0;bottom:0;padding:2.2em 9px 8px;color:#fff;background:linear-gradient(transparent,rgba(20,14,10,.8));opacity:0;transition:opacity .35s}
+.ev .cap{opacity:var(--c,0)}
+.art:hover .cap{opacity:calc(var(--c,0))}
+.cap b{display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden;font-weight:400;font-size:clamp(11px,1.15em,19px);letter-spacing:-.01em;line-height:1.1}
+.cap i{display:block;font-style:normal;font-family:ui-sans-serif,system-ui,sans-serif;font-size:clamp(7px,.7em,10px);letter-spacing:.12em;text-transform:uppercase;opacity:.8;margin-top:3px}
+.arrow{position:absolute;top:7px;right:7px;color:#fff;font:12px ui-sans-serif,system-ui,sans-serif;opacity:var(--c,0);background:rgba(20,14,10,.55);border-radius:50%;width:22px;height:22px;display:grid;place-items:center}
+.tag{position:absolute;top:7px;left:7px;font:8px ui-sans-serif,system-ui,sans-serif;letter-spacing:.14em;text-transform:uppercase;color:#fff;background:var(--rust);padding:3px 5px;opacity:var(--c,0)}
+.small .cap i,.small .tag{display:none}
+.box.empty .m,.box.empty .cap,.box.empty .tag,.box.empty .arrow{display:none}
+
+#name{position:absolute;inset:0;display:grid;place-items:center;pointer-events:none;opacity:0}
+#name span{display:block;color:var(--nameInk,#fff);font-weight:400;font-size:9em;letter-spacing:-.045em;line-height:1;white-space:nowrap;
+  text-shadow:var(--nameShadow,0 .02em .5em rgba(10,6,4,.45));animation:float 7s ease-in-out infinite alternate}
+@keyframes float{from{transform:translateY(.18em)}to{transform:translateY(-.18em)}}
+#note{position:absolute;left:2.5%;bottom:1.2%;font:.8em ui-sans-serif,system-ui,sans-serif;letter-spacing:.08em;color:#6b6259;opacity:0;pointer-events:none}
+#cvlink{position:absolute;right:0;top:.4em;font:.85em ui-sans-serif,system-ui,sans-serif;letter-spacing:.14em;text-transform:uppercase;color:var(--ink);text-decoration:none;border-bottom:1px solid currentColor;pointer-events:auto}
+#head{position:absolute;left:2.5%;right:2.5%;top:2.4%;display:flex;justify-content:space-between;align-items:flex-end;pointer-events:none;opacity:0}
+#head h1{font-weight:400;font-size:3.6em;letter-spacing:-.035em;line-height:.95}
+#head span{font:.85em ui-sans-serif,system-ui,sans-serif;letter-spacing:.16em;text-transform:uppercase;color:var(--rust)}
+#label{position:absolute;left:2.5%;bottom:5%;color:#e9dfd2;opacity:0;transition:opacity .5s;pointer-events:none}
+#label small{display:block;font:.8em ui-sans-serif,system-ui,sans-serif;letter-spacing:.18em;text-transform:uppercase;color:#d98a5f;margin-bottom:.5em}
+#label div{font-size:5em;letter-spacing:-.035em;line-height:.95}
+
+#ui{position:fixed;right:14px;bottom:12px;display:flex;gap:8px;z-index:30}
+#ui button,#panel button{font:11px ui-sans-serif,system-ui,sans-serif;letter-spacing:.12em;text-transform:uppercase;padding:8px 13px;border:1px solid rgba(255,255,255,.7);background:rgba(15,11,8,.38);-webkit-backdrop-filter:blur(8px);backdrop-filter:blur(8px);color:#fff;cursor:pointer;border-radius:999px;transition:background .2s,color .4s,border-color .4s}
+#ui button:hover{background:rgba(15,11,8,.6)}
+body.light #ui button{background:transparent;color:var(--ink);border-color:var(--ink)}
+body.light #ui button:hover{background:rgba(0,0,0,.07)}
+#ui #explore,body.light #ui #explore{background:var(--ink);color:#fff;border-color:var(--ink)}
+#panel{position:fixed;right:14px;bottom:56px;width:min(440px,calc(100vw - 28px));max-height:calc(100vh - 80px);overflow:auto;background:#fbf8f3;color:var(--ink);border:1px solid #cfc7ba;padding:16px;z-index:40;display:none;box-shadow:0 20px 60px rgba(0,0,0,.35)}
+#panel.open{display:block}
+#panel h2{font-weight:400;font-size:20px;letter-spacing:-.02em;margin-bottom:4px}
+#panel p{font:12px/1.45 ui-sans-serif,system-ui,sans-serif;color:#6b6259;margin-bottom:10px}
+#panel label{display:block;font:10px ui-sans-serif,system-ui,sans-serif;letter-spacing:.14em;text-transform:uppercase;color:var(--rust);margin:10px 0 4px}
+#panel textarea,#panel input{width:100%;font:11px/1.4 ui-monospace,Menlo,monospace;padding:8px;border:1px solid #cfc7ba;background:#fff;color:var(--ink)}
+#panel textarea{height:100px;resize:vertical}
+#panel .row{display:flex;gap:8px;margin-top:12px}
+#panel button{color:var(--ink);border-color:var(--ink);background:transparent}
+#panel button.go{background:var(--ink);color:#fff}
+</style>
+</head>
+<body>
+<div id="frame">
+  <div id="stage"><div id="plane"><canvas id="decor"></canvas><div id="heroes"></div></div></div>
+  <div id="fog"></div>
+  <div id="label"><small>Selected works</small><div id="lt"></div></div>
+  <div id="name"><span>Christina Quarles</span></div>
+  <div id="note">Design study · not the artist’s official site</div>
+  <div id="head"><h1>Christina Quarles</h1><span>Series &amp; Events</span><a href="cv.html" id="cvlink">CV</a></div>
+</div>
+<div id="ui"><button id="imgs">Images</button><button id="skip">Skip</button><button id="replay">Replay</button><button id="explore">Explore events</button></div>
+<div id="panel">
+  <h2>Hotlink images from her site</h2>
+  <p>On her site: right-click an image, Copy image address, paste one URL per line. Slots without an image stay empty boxes. Saved in this browser only.</p>
+  <label>Final full-page artwork — one URL (cropped to 16:9)</label>
+  <input id="heroUrl" placeholder="https://…/hero-painting.jpg">
+  <label>Artwork — one image URL per line</label>
+  <textarea id="artUrls" placeholder="https://…/painting-1.jpg"></textarea>
+  <label>Events — image URL | title | venue · city · year | link</label>
+  <textarea id="evUrls" placeholder="https://…/install-view.jpg | Show title | Gallery · City · 2026 | https://…/exhibition-page"></textarea>
+  <div class="row"><button class="go" id="apply">Apply &amp; replay</button><button id="reset">Reset to placeholders</button></div>
+</div>
+
+<script>
+/* =====================================================================
+   CONFIG. placeholders:true paints stand-in art until real URLs exist.
+   Easiest way to add real images: the "Images" panel (bottom right).
+   ===================================================================== */
+const CONFIG = {"tools": false, "placeholders": false, "hero": "img/sunshine.jpg", "heroPos": "center 45%", "nameInk": "#1d1a17", "nameShadow": "0 0 .45em rgba(255,252,246,.75),0 0 .1em rgba(255,252,246,.6)", "series": [{"title": "Paintings 2017", "images": ["img/sunshine.jpg", "img/sky.jpg", "img/fallback.jpg"], "titles": ["Yer Tha Sunshine in my Mourning Babe", "Tha Color of Tha Sky", "Fallback Back Side"]}, {"title": "Paintings 2020–21", "images": ["https://payload.cargocollective.com/1/22/727799/14302516/CQ0267p-crop_1000.jpg", "https://payload.cargocollective.com/1/22/727799/14302516/CQ0265p-crop_1000.jpg", "https://payload.cargocollective.com/1/22/727799/14302516/CQ0263p-crop_1000.jpg", "https://payload.cargocollective.com/1/22/727799/14302516/CQ0251p-crop_1000.jpg", "https://payload.cargocollective.com/1/22/727799/14302516/CQ0247p-crop_837.jpg", "https://payload.cargocollective.com/1/22/727799/14302516/CQ0243p-crop_1000.jpg", "https://payload.cargocollective.com/1/22/727799/14302516/CQ0231p-crop-1_1000.jpg", "https://payload.cargocollective.com/1/22/727799/14302516/CQ0194p-1-copy_1000.jpg"], "titles": ["New Moon, 2021", "O Holy Nite, 2021", "A Little Fall of Rain, 2020", "Tomorrow Comes Today (Come What May/Cum, Whatever, Maybe), 2020", "Tha Nite Could Last Ferever, 2020", "Pried/Prayed (Hard Rain Gon' Come), 2020", "For Sorrow or Inspiration, 2020", "Held Fast and Let Go Likewise, 2020"]}, {"title": "Paintings 2019", "images": ["https://payload.cargocollective.com/1/22/727799/14302516/CQ0187p-1-copy_1000.jpg", "https://payload.cargocollective.com/1/22/727799/14302516/CQ0181p_898.jpg", "https://payload.cargocollective.com/1/22/727799/14302516/CQ0142p-crop_1000.jpg", "https://payload.cargocollective.com/1/22/727799/14302516/CQ0139p-1-crop_1000.jpg", "https://payload.cargocollective.com/1/22/727799/14302516/CQ0132p-1-copy_1000.jpg", "https://payload.cargocollective.com/1/22/727799/14302516/CQ0131p_1000.jpg"], "titles": ["Bits n' Pieces, 2019", "By Tha Skin of Our Tooth, 2019", "Laid Down Beside Yew, 2019", "I Just Missed Yew, 2019", "Bless tha Nightn'gale, 2019", "Sumday (We Gunna Rest on) Sunday, 2019"]}, {"title": "Drawings 2019", "images": ["https://payload.cargocollective.com/1/22/727799/14068962/CQ0145d_1000.jpeg", "https://payload.cargocollective.com/1/22/727799/14068962/CQ0147d_1000.jpeg", "https://payload.cargocollective.com/1/22/727799/14068962/CQ0148d_1000.jpeg", "https://payload.cargocollective.com/1/22/727799/14068962/CQ0156d_1000.jpeg", "https://payload.cargocollective.com/1/22/727799/14068962/CQ0160d_1000.jpeg", "https://payload.cargocollective.com/1/22/727799/14068962/CQ0161d_1000.jpeg", "https://payload.cargocollective.com/1/22/727799/14068962/CQ0163d_1000.jpeg"], "titles": ["And We Do Go On, 2019", "Too Blesst To Be Stresst, 2019", "When She Smiles, 2019", "All Yull Need, 2019", "For Whom Tha Son Sets Free, 2019", "We Need Yew Now / Yew Need Ta Know, 2019", "In My Love, 2019"]}, {"title": "Drawings 2018", "images": ["https://payload.cargocollective.com/1/22/727799/14068962/CQ0099d_1000.jpeg", "https://payload.cargocollective.com/1/22/727799/14068962/CQ0101d_1000.jpeg", "https://payload.cargocollective.com/1/22/727799/14068962/CQ0106d_1000.jpeg"], "titles": ["Untitled (Carry On), 2018", "Untitled (Sum Day), 2018", "Untitled (Intolerably/ Probably), 2018"]}], "events": [{"title": "“Now We're There (And We' Only Just Begun)”", "meta": "Los Angeles County Museum of Art · 2026", "href": "https://www.christinaquarles.com/Now-We-re-There-And-We-Only-Just-Begun-at-The-Los-Angeles-County", "img": "https://payload.cargocollective.com/1/22/727799/14302516/CQ0267p-crop_1000.jpg"}, {"title": "The Ground Glows Black", "meta": "Hauser & Wirth · 2026", "href": "https://www.christinaquarles.com/The-Ground-Glows-Black-at-Hauser-Wirth-Los-Angeles", "img": "https://payload.cargocollective.com/1/22/727799/14302516/CQ0265p-crop_1000.jpg"}, {"title": "Living in the Wake", "meta": "Kistefos Museum · 2025", "href": "https://www.christinaquarles.com/Living-in-the-Wake-Kistefos-Museum", "img": "https://payload.cargocollective.com/1/22/727799/14302516/CQ0263p-crop_1000.jpg"}, {"title": "Far From Near", "meta": "SCAD Museum of Art · 2025", "href": "https://www.scadmoa.org/exhibitions/far-from-near", "img": "https://payload.cargocollective.com/1/22/727799/14302516/CQ0251p-crop_1000.jpg"}, {"title": "In The Shadow of Burning Light", "meta": "Gammel Strand · 2024", "href": "https://www.christinaquarles.com/In-The-Shadow-of-Burning-Light-at-Gammel-Strand", "img": "https://payload.cargocollective.com/1/22/727799/14302516/CQ0247p-crop_837.jpg"}, {"title": "Tripping Over My Joy", "meta": "Pilar Corrias · 2023", "href": "https://www.christinaquarles.com/Tripping-Over-My-Joy-at-Pilar-Corrias", "img": "https://payload.cargocollective.com/1/22/727799/14302516/CQ0243p-crop_1000.jpg"}, {"title": "Collapsed Time", "meta": "Hamburger Bahnhof · 2023", "href": "https://www.christinaquarles.com/Christina-Quarles-Collapsed-Time-at-The-Hamburger-Bahnhof", "img": "https://payload.cargocollective.com/1/22/727799/14302516/CQ0231p-crop-1_1000.jpg"}, {"title": "In 24 Days tha Sun'll Set at 7pm", "meta": "Hauser & Wirth · 2022", "href": "https://www.christinaquarles.com/In-24-Days-tha-Sun-ll-Set-at-7pm-Hauser-Wirth", "img": "https://payload.cargocollective.com/1/22/727799/14302516/CQ0194p-1-copy_1000.jpg"}, {"title": "The Milk of Dreams", "meta": "The 59th Venice Biennale · 2022", "href": "https://www.christinaquarles.com/Milk-of-Dreams-59th-Venice-Biennale", "img": "https://payload.cargocollective.com/1/22/727799/14302516/CQ0187p-1-copy_1000.jpg"}, {"title": "Christina Quarles", "meta": "Frye Art Museum · 2022", "href": "https://www.christinaquarles.com/Christina-Quarles-Frye-Art-Museum", "img": "https://payload.cargocollective.com/1/22/727799/14302516/CQ0181p_898.jpg"}, {"title": "Christina Quarles: In Likeness", "meta": "South London Gallery · 2021", "href": "https://www.christinaquarles.com/In-Likeness-South-London-Gallery-London", "img": "https://payload.cargocollective.com/1/22/727799/14302516/CQ0142p-crop_1000.jpg"}, {"title": "Christina Quarles: Dance by tha Light of tha Moon", "meta": "X Museum · 2021", "href": "https://www.christinaquarles.com/Dance-by-tha-Light-of-tha-Moon-X-Museum-Beijing", "img": "https://payload.cargocollective.com/1/22/727799/14302516/CQ0139p-1-crop_1000.jpg"}, {"title": "Christina Quarles", "meta": "Museum of Contemporary Art · 2021", "href": "https://www.christinaquarles.com/Christina-Quarles-MCA-Chicago", "img": "https://payload.cargocollective.com/1/22/727799/14302516/CQ0132p-1-copy_1000.jpg"}, {"title": "I Won’t Fear Tumbling or Falling/If We’ll be Joined in Another World", "meta": "Pilar Corrias · 2020", "href": "https://www.christinaquarles.com/I-Won-t-Fear-Tumbling-or-Falling-If-We-ll-be-Joined-in-Another-World", "img": "https://payload.cargocollective.com/1/22/727799/14302516/CQ0131p_1000.jpg"}, {"title": "Christina Quarles: In Likeness", "meta": "The Hepworth Wakefield · 2019", "href": "https://www.christinaquarles.com/In-Likeness-The-Hepworth-Wakefield", "img": "https://payload.cargocollective.com/1/22/727799/14302516/CQ0267p-crop_1000.jpg"}, {"title": "Christina Quarles: But I Woke Jus’ Tha Same", "meta": "Regen Projects · 2019", "href": "https://www.christinaquarles.com/But-I-Woke-Jus-Tha-Same-Regen-Projects", "img": "https://payload.cargocollective.com/1/22/727799/14302516/CQ0265p-crop_1000.jpg"}, {"title": "Christina Quarles / MATRIX 271", "meta": "University of California, Berkley Art Museum & Pacific Film Archive · 2018", "href": "https://www.christinaquarles.com/Matrix-271-BAMPFA", "img": "https://payload.cargocollective.com/1/22/727799/14302516/CQ0263p-crop_1000.jpg"}, {"title": "Christina Quarles: Always Brightest Before Tha Dusk", "meta": "Pilar Corrias Gallery · 2018", "href": "https://www.christinaquarles.com/Always-Brightest-Before-Tha-Dusk-Pilar-Corrias-Gallery", "img": "https://payload.cargocollective.com/1/22/727799/14302516/CQ0251p-crop_1000.jpg"}, {"title": "Made in L.A. 2018", "meta": "Hammer Museum · 2018", "href": "https://www.christinaquarles.com/Made-in-LA-The-Hammer-Museum", "img": "https://payload.cargocollective.com/1/22/727799/14302516/CQ0247p-crop_837.jpg"}, {"title": "Christina Quarles: Baby, I Want Yew To Know All Tha Folks I Am", "meta": "David Castillo Gallery · 2017", "href": "https://www.christinaquarles.com/Baby-I-Want-Yew-To-Know-All-Tha-Folks-I-Am-David-Castillo-Gallery", "img": "https://payload.cargocollective.com/1/22/727799/14302516/CQ0243p-crop_1000.jpg"}, {"title": "Trigger: Gender as a Tool and a Weapon", "meta": "The New Museum · 2017", "href": "https://www.christinaquarles.com/Trigger-The-New-Museum", "img": "https://payload.cargocollective.com/1/22/727799/14302516/CQ0231p-crop-1_1000.jpg"}, {"title": "Fictions", "meta": "The Studio Museum in Harlem · 2017", "href": "https://www.christinaquarles.com/Fictions-The-Studio-Museum-in-Harlem", "img": "https://payload.cargocollective.com/1/22/727799/14302516/CQ0194p-1-copy_1000.jpg"}, {"title": "It’s Gunna Be All Right, Cause Baby, There Ain’t Nuthin’ Left", "meta": "Skibum MacArthur · 2017", "href": "https://www.christinaquarles.com/It-s-Gunna-Be-All-Right-Cause-Baby-There-Ain-t-Nuthin-Left", "img": "https://payload.cargocollective.com/1/22/727799/14302516/CQ0187p-1-copy_1000.jpg"}]};
+
+const NBOX = 44, DECOR = 100, TEND = 12.6;
+const PALETTES = [
+  ['#f3cfae','#d94f6b','#1f6f78','#f2b632','#2b3a8c','#1a1412'],
+  ['#2b3a8c','#f3cfae','#e2603a','#7fc7b0','#f2b632','#1a1412'],
+  ['#e8b7a0','#2f7d6b','#c8365a','#f6d36b','#5b3a8c','#1a1412'],
+  ['#f6e3c4','#e2603a','#2b3a8c','#9bd0c4','#d94f6b','#1a1412'],
+  ['#7fc7b0','#f2b632','#d94f6b','#2b3a8c','#f3cfae','#1a1412']
+];
+
+const clamp=(v,a=0,b=1)=>Math.min(b,Math.max(a,v));
+const lerp=(a,b,t)=>a+(b-a)*t;
+const eIO=t=>t<.5?4*t*t*t:1-Math.pow(-2*t+2,3)/2;
+const eSine=t=>-(Math.cos(Math.PI*t)-1)/2;
+const mul=a=>()=>{a|=0;a=a+0x6D2B79F5|0;let t=Math.imul(a^a>>>15,1|a);t=t+Math.imul(t^t>>>7,61|t)^t;return((t^t>>>14)>>>0)/4294967296};
+
+function paintArt(seed,pal,W=520,H=W,n,rLo=.14,rHi=.4){
+  const r=mul(seed),c=document.createElement('canvas');c.width=W;c.height=H;const x=c.getContext('2d');
+  const sc=Math.max(1,H/520);n=n||6+Math.floor(r()*4);
+  x.fillStyle=pal[0];x.fillRect(0,0,W,H);
+  for(let i=0;i<n;i++){
+    const cx=r()*W,cy=r()*H,R=H*(rLo+r()*(rHi-rLo)),k=7;
+    const pts=[...Array(k)].map((_,j)=>{const a=j/k*Math.PI*2,rr=R*(.55+r()*.7);return[cx+Math.cos(a)*rr,cy+Math.sin(a)*rr]});
+    x.beginPath();
+    for(let j=0;j<k;j++){const p=pts[j],q=pts[(j+1)%k],m=[(p[0]+q[0])/2,(p[1]+q[1])/2];
+      if(j===0){const l=pts[k-1];x.moveTo((l[0]+p[0])/2,(l[1]+p[1])/2)}
+      x.quadraticCurveTo(p[0],p[1],m[0],m[1]);}
+    x.closePath();x.fillStyle=pal[1+Math.floor(r()*(pal.length-1))];x.fill();
+    const u=r();
+    if(u<.35){x.save();x.clip();x.strokeStyle=pal[pal.length-1];x.lineWidth=3*sc;const ang=r()*Math.PI;
+      for(let s=-W;s<W*2;s+=14*sc){x.beginPath();x.moveTo(s,0);x.lineTo(s+Math.tan(ang-1)*H,H);x.stroke()}x.restore()}
+    else if(u<.6){x.save();x.clip();x.fillStyle=pal[0];
+      for(let a=0;a<W;a+=18*sc)for(let b=0;b<H;b+=18*sc){x.beginPath();x.arc(a,b,3.2*sc,0,7);x.fill()}x.restore()}
+    if(r()<.5){x.lineWidth=5*sc;x.strokeStyle=pal[pal.length-1];x.stroke()}
+  }
+  return c;
+}
+function paintEvent(seed,S=520){
+  const r=mul(seed*977),c=document.createElement('canvas');c.width=c.height=S;const x=c.getContext('2d');
+  const g=x.createLinearGradient(0,0,0,S);g.addColorStop(0,'#e7dccd');g.addColorStop(1,'#cbbca8');
+  x.fillStyle=g;x.fillRect(0,0,S,S);const floor=S*.78;x.fillStyle='#a99880';x.fillRect(0,floor,S,S-floor);
+  const n=2+Math.floor(r()*3);
+  for(let i=0;i<n;i++){
+    const w=S*(.14+r()*.22),h=S*(.2+r()*.3),px=S*(.08+i*(.84/n))+r()*10,py=floor-h-S*(.04+r()*.12);
+    x.fillStyle='#f6f1e8';x.fillRect(px-6,py-6,w+12,h+12);
+    x.fillStyle=PALETTES[Math.floor(r()*5)][Math.floor(r()*5)];x.fillRect(px,py,w,h);
+    x.fillStyle=PALETTES[Math.floor(r()*5)][Math.floor(r()*5)];x.beginPath();x.ellipse(px+w*.5,py+h*.55,w*.3,h*.28,r()*3,0,7);x.fill();
+  }
+  return c;
+}
+
+/* random rectangle subdivision: random sizes, tiles the whole area */
+function subdivide(x,y,w,h,n,out,rnd){
+  if(n<=1||w<70||h<46){out.push({x,y,w,h});return}
+  const splitW=(w/h)*(.7+rnd()*.6)>1;
+  const r=.28+.44*rnd(),n1=clamp(Math.round(n*(.25+.5*rnd())),1,n-1);
+  if(splitW){const w1=w*r;subdivide(x,y,w1,h,n1,out,rnd);subdivide(x+w1,y,w-w1,h,n-n1,out,rnd)}
+  else{const h1=h*r;subdivide(x,y,w,h1,n1,out,rnd);subdivide(x,y+h1,w,h-h1,n-n1,out,rnd)}
+}
+
+/* ---------- scene ---------- */
+const $=id=>document.getElementById(id);
+const frame=$('frame'),stage=$('stage'),plane=$('plane'),decor=$('decor'),heroes=$('heroes'),
+      fog=$('fog'),head=$('head'),label=$('label'),lt=$('lt'),nameEl=$('name'),root=document.documentElement;
+let fw,fh,PW,PH,Yc,camStart,sF,zS=2.6,boxes=[],raf=0,exRaf=0,t0=0,curT=0,lastLabel=-1,mox=0,moy=0,po=38,ex=0,heroSrc=null;
+
+function makeBox(tag){
+  const el=document.createElement(tag);el.className='box';
+  el.innerHTML='<i class="sd sl"></i><i class="sd sr"></i><i class="sd st"></i><i class="sd sb"></i><div class="fr"></div>';
+  return el;
+}
+const SHADES=['#25211e','#2d2824','#34302b','#2a2622','#3a342e'];
+const LIGHTS=['#cfc8bc','#c4bcaf','#d6d0c5','#bdb4a6','#cbc3b5'];
+const hex=h=>[1,3,5].map(i=>parseInt(h.substr(i,2),16));
+const mix=(a,b,t)=>'rgb('+a.map((v,i)=>Math.round(lerp(v,b[i],t))).join(',')+')';
+
+function setHero(){
+  root.style.setProperty('--heroPos',CONFIG.heroPos||'center');
+  root.style.setProperty('--nameInk',CONFIG.nameInk||'#fff');
+  if(CONFIG.nameShadow)root.style.setProperty('--nameShadow',CONFIG.nameShadow);
+  if(CONFIG.hero){root.style.setProperty('--hero','url("'+CONFIG.hero.replace(/"/g,'%22')+'")');return}
+  if(!heroSrc){
+    const pal=['#f3cfae','#d94f6b','#1f6f78','#f2b632','#2b3a8c','#e2603a','#7fc7b0','#1a1412'];
+    heroSrc=paintArt(41,pal,1600,900,26,.2,.5).toDataURL('image/jpeg',.92);
+  }
+  root.style.setProperty('--hero','url('+heroSrc+')');
+}
+
+function build(){
+  const W=innerWidth,H=innerHeight;
+  fw=Math.floor(Math.min(W,H*16/9));fh=Math.floor(fw*9/16);
+  frame.style.cssText='left:'+Math.round((W-fw)/2)+'px;top:'+Math.round((H-fh)/2)+'px;width:'+fw+'px;height:'+fh+'px;font-size:'+fw/100+'px';
+  setHero();
+  PW=Math.round(fw*1.7);sF=PW*.9/fw;
+  const span=fh*sF*zS;PH=Math.round(span+fh*3.4);Yc=Math.round(PH/2);camStart=Yc+span/2+fh*.5;
+  plane.style.width=PW+'px';plane.style.height=PH+'px';plane.style.marginLeft=-PW/2+'px';
+
+  const sc=.5,rd=mul(11);decor.width=PW*sc;decor.height=PH*sc;decor.style.width=PW+'px';decor.style.height=PH+'px';
+  const d=decor.getContext('2d');d.scale(sc,sc);d.fillStyle='#1b1816';d.fillRect(0,0,PW,PH);
+  for(let i=0;i<PW*PH/9000;i++){
+    const w=18+Math.pow(rd(),2.2)*200,h=18+Math.pow(rd(),2.2)*200;
+    d.fillStyle=SHADES[Math.floor(rd()*5)];d.globalAlpha=.55;d.fillRect(rd()*PW,rd()*PH,w,h)}
+  d.globalAlpha=1;
+
+  // rectangles tile the whole 16:9 frame (this is the final assembled artwork)
+  const rects=[],rnd=mul(5);subdivide(0,0,fw,fh,NBOX,rects,rnd);
+  rects.sort((a,b)=>(a.y+a.x*.15)-(b.y+b.x*.15));
+  const areas=rects.map(r=>r.w*r.h).sort((a,b)=>a-b),med=areas[areas.length>>1];
+  heroes.innerHTML='';boxes=[];
+  const nS=CONFIG.series.length,gap=6,mx=fw*.025,top=fh*.15,bot=fh*.035,gW=fw-2*mx,gH=fh-top-bot,sx=gW/fw,sy=gH/fh;
+  const px0=PW/2-fw/2,py0=Yc-fh/2;
+  let evI=0,alt=0;const artK=Array(nS).fill(0),flightRects=[];
+  rects.forEach((r,i)=>{
+    const cx=r.x+r.w/2,cy=r.y+r.h/2;
+    let filled=rnd()>(r.w*r.h<med?.45:.15),isEv=false,media=null,ev=null,sIdx=Math.min(nS-1,Math.floor(cy/fh*nS));
+    if(filled){
+      isEv=(alt++%2===0);
+      if(isEv){
+        ev=CONFIG.events[evI%CONFIG.events.length];evI++;
+        if(ev.img)media={url:ev.img};else if(CONFIG.placeholders)media={cnv:paintEvent(i+1)};
+      }else{
+        const s=CONFIG.series[sIdx],k=artK[sIdx]++;
+        if(s.images&&s.images.length)media={url:s.images[k%s.images.length]};
+        else if(CONFIG.placeholders)media={cnv:paintArt(i*13+5,PALETTES[sIdx%5])};
+      }
+      if(!media)filled=false;
+    }
+    const el=makeBox(isEv&&filled?'a':'div');
+    const fr=el.querySelector('.fr'),mm=document.createElement('div');mm.className='m';
+    el.style.setProperty('--sc',SHADES[Math.floor(rnd()*5)]);
+    el.classList.add(filled?'filled':'empty');
+    if(filled){
+      el.classList.add(isEv?'ev':'art');
+      if(media.url){
+        const im=new Image();im.referrerPolicy='no-referrer';im.alt='';
+        im.onerror=()=>{el.classList.remove('filled');el.classList.add('empty');el.removeAttribute('href')};
+        im.src=media.url;mm.appendChild(im);
+      }else mm.appendChild(media.cnv);
+      fr.appendChild(mm);
+      const cap=document.createElement('div');cap.className='cap';
+      if(isEv){
+        el.href=ev.href||'#';el.target='_blank';el.rel='noopener noreferrer';
+        cap.innerHTML='<b></b><i></i>';cap.firstChild.textContent=ev.title;cap.lastChild.textContent=ev.meta||'';
+        const tag=document.createElement('div');tag.className='tag';tag.textContent='Event';
+        const ar=document.createElement('div');ar.className='arrow';ar.textContent='↗';
+        fr.append(cap,tag,ar);
+      }else{
+        const s2=CONFIG.series[sIdx],ti=s2.titles&&s2.images&&s2.images.length?s2.titles[(artK[sIdx]-1)%s2.images.length]:null;
+        cap.innerHTML='<b></b><i></i>';cap.firstChild.textContent=ti||s2.title;cap.lastChild.textContent=ti?s2.title:'Selected works';fr.appendChild(cap);
+      }
+    }
+    // this tile's slice of the final full-page artwork
+    const hs=document.createElement('div');hs.className='hs';
+    hs.style.cssText='left:'+(-r.x)+'px;top:'+(-r.y)+'px;width:'+fw+'px;height:'+fh+'px;clip-path:inset(0 100% 0 0)';
+    fr.appendChild(hs);
+    if(r.w<120||r.h<80)el.classList.add('small');
+    heroes.appendChild(el);
+    const d0=40+Math.pow(rnd(),1.5)*170,ci=Math.floor(rnd()*5);
+    const b={el,mm,hs,filled,isEv,decor:false,d0,dF:d0*.3,c0:hex(SHADES[ci]),c1:hex(LIGHTS[ci]),
+      thr:.42+.38*(cx/fw),
+      fw_:(r.w-gap)*sF*.9,fh_:(r.h-gap)*sF*.9,
+      fL:PW/2+(cx-fw/2)*sF-(r.w-gap)*sF*.45,fT:Yc+(cy-fh/2)*sF*zS-(r.h-gap)*sF*.45,fy:Yc+(cy-fh/2)*sF*zS,
+      aL:px0+r.x,aT:py0+r.y,aW:r.w,aH:r.h,
+      eL:px0+mx+r.x*sx+gap/2,eT:py0+top+r.y*sy+gap/2,eW:r.w*sx-gap,eH:r.h*sy-gap};
+    flightRects.push([b.fL-30,b.fT-30,b.fL+b.fw_+30,b.fT+b.fh_+30]);
+    boxes.push(b);
+  });
+
+  let placed=0,tries=0;const rdc=mul(23);
+  while(placed<DECOR&&tries++<2000){
+    const w=70+Math.pow(rdc(),1.6)*300,h=70+Math.pow(rdc(),1.6)*300,x=rdc()*(PW-w),y=PH*.04+rdc()*(PH*.94-h);
+    if(flightRects.some(q=>x<q[2]&&x+w>q[0]&&y<q[3]&&y+h>q[1]))continue;
+    const el=makeBox('div');el.style.setProperty('--sc',SHADES[Math.floor(rdc()*5)]);
+    el.querySelector('.fr').style.setProperty('--fc',SHADES[Math.floor(rdc()*5)]);
+    heroes.appendChild(el);
+    boxes.push({el,decor:true,d0:30+Math.pow(rdc(),1.4)*190,x,y,w,h});placed++;
+  }
+}
+
+function setPO(){stage.style.perspectiveOrigin=(50+mox)+'% '+(po+moy)+'%'}
+
+function render(t){
+  curT=t;
+  const fl=clamp((t-1)/7.5),fe=eSine(fl),camY=fl>=1?Yc:lerp(camStart,Yc,fe);
+  const flat=eIO(clamp((t-7.6)/3.8)),pitch=lerp(70,60,fe)*(1-flat),m=eIO(clamp((t-8)/3.6));
+  plane.style.transform='rotateX('+pitch.toFixed(2)+'deg) translateY('+(-camY).toFixed(1)+'px)';
+  stage.style.perspective=lerp(900,1500,Math.max(m*.0,ex)).toFixed(0)+'px';po=lerp(38,50,m);setPO();
+  const R=fh*2.4,spanR=fh*.9,snap=m>=1;
+  for(const b of boxes){
+    const el=b.el;
+    if(b.decor){
+      if(m>.98){el.style.display='none';continue}
+      el.style.display='';
+      el.style.setProperty('--w',b.w+'px');el.style.setProperty('--h',b.h+'px');el.style.setProperty('--d',(b.d0*(1-m)).toFixed(1)+'px');
+      el.style.transform='translate3d('+b.x.toFixed(1)+'px,'+b.y.toFixed(1)+'px,0)';continue;
+    }
+    let L=lerp(lerp(b.fL,b.aL,m),b.eL,ex),T=lerp(lerp(b.fT,b.aT,m),b.eT,ex),
+        W=lerp(lerp(b.fw_,b.aW,m),b.eW,ex),Hh=lerp(lerp(b.fh_,b.aH,m),b.eH,ex);
+    if(snap){ // crisp pixel-snapped edges; 1px overlap when assembled so no hairline gaps
+      const l=Math.round(L),tt=Math.round(T),r=Math.round(L+W),bb=Math.round(T+Hh),ov=ex<.002?1:0;
+      L=l;T=tt;W=r-l+ov;Hh=bb-tt+ov;
+    }
+    el.style.setProperty('--w',W.toFixed(1)+'px');el.style.setProperty('--h',Hh.toFixed(1)+'px');
+    el.style.setProperty('--d',lerp(lerp(b.d0,0,m),b.dF,ex).toFixed(1)+'px');
+    el.style.transform='translate3d('+L.toFixed(1)+'px,'+T.toFixed(1)+'px,0)';
+    // own image reveal during the flight
+    if(b.filled){
+      const p=t>=8.2?1:clamp((R-(camY-b.fy))/spanR),pe=eSine(p);
+      b.mm.style.clipPath='inset(0 '+((1-pe)*100).toFixed(1)+'% 0 0)';
+      b.mm.style.transform='scale('+(1.18-.18*pe).toFixed(3)+')';
+      el.style.setProperty('--e',(Math.sin(pe*Math.PI)*.9*(1-m)).toFixed(3));
+    }else{
+      const col=mix(b.c0,b.c1,ex);el.style.setProperty('--sc',col);el.style.setProperty('--fc',col);
+    }
+    el.style.setProperty('--c',clamp((ex-.6)/.4).toFixed(2));
+    // crisp wipe of the final artwork across the tiles, left to right
+    const pw=snap?1:clamp((m-b.thr)/.16),hp=pw*(1-ex);
+    b.hs.style.clipPath=hp<=0?'inset(0 100% 0 0)':'inset(0 '+((1-hp)*100).toFixed(2)+'% 0 0)';
+  }
+  const a=[24,21,19],c=[217,211,201],bgc='rgb('+a.map((v,i)=>Math.round(lerp(v,c[i],ex))).join(',')+')';
+  root.style.setProperty('--bg',bgc);
+  decor.style.opacity=(1-m).toFixed(3);fog.style.opacity=(1-m).toFixed(3);
+  nameEl.style.opacity=(clamp((t-11.2)/1.2)*(1-clamp(ex*2.2))).toFixed(3);
+  head.style.opacity=clamp((ex-.6)/.4).toFixed(2);$('note').style.opacity=head.style.opacity;
+  document.body.classList.toggle('light',ex>.5);
+  frame.classList.toggle('live',ex>=.95);
+  const span=fh*sF*zS,rel=clamp((camY-fh*.9-(Yc-span/2))/span),sIdx=Math.min(CONFIG.series.length-1,Math.floor(rel*CONFIG.series.length));
+  label.style.opacity=(t>1.4&&t<8.4)?1:0;
+  if(sIdx!==lastLabel){lastLabel=sIdx;lt.textContent=CONFIG.series[sIdx].title}
+}
+function loop(now){const t=(now-t0)/1000;if(t>=TEND){render(TEND);raf=0;return}render(t);raf=requestAnimationFrame(loop)}
+function play(from){cancelAnimationFrame(raf);cancelAnimationFrame(exRaf);ex=0;setExploreLabel();t0=performance.now()-(from||0)*1000;lastLabel=-1;raf=requestAnimationFrame(loop)}
+function finish(){cancelAnimationFrame(raf);raf=0;render(TEND)}
+
+function setExploreLabel(){$('explore').textContent=ex>.5||exTarget===1?'Back to artwork':'Explore events'}
+let exTarget=0;
+function animEx(to){
+  if(raf)finish();
+  cancelAnimationFrame(exRaf);exTarget=to;setExploreLabel();
+  const from=ex,st=performance.now();
+  (function step(now){const u=clamp((now-st)/1500);ex=lerp(from,to,eIO(u));render(TEND);if(u<1)exRaf=requestAnimationFrame(step)})(st);
+  if(!to){mox=0;moy=0}
+}
+$('explore').onclick=()=>animEx(exTarget?0:1);
+$('replay').onclick=()=>{exTarget=0;play(0)};
+$('skip').onclick=()=>{exTarget=0;ex=0;finish();setExploreLabel()};
+$('imgs').onclick=()=>$('panel').classList.toggle('open');
+addEventListener('keydown',e=>{if(e.code==='Space'&&!/INPUT|TEXTAREA/.test(e.target.tagName)){e.preventDefault();$('skip').click()}});
+frame.addEventListener('pointermove',e=>{
+  if(ex<.95)return;const r=frame.getBoundingClientRect();
+  mox=((e.clientX-r.left)/r.width-.5)*26;moy=((e.clientY-r.top)/r.height-.5)*26;setPO();
+});
+
+function fillPanel(){
+  if(CONFIG.placeholders)return;
+  $('heroUrl').value=CONFIG.hero||'';
+  $('artUrls').value=CONFIG.series.flatMap(s=>s.images).join('\n');
+  $('evUrls').value=CONFIG.events.filter(e=>e.img||e.href!=='#').map(e=>[e.img||'',e.title,e.meta||'',e.href||''].join(' | ')).join('\n');
+}
+$('apply').onclick=()=>{
+  const hero=$('heroUrl').value.trim();
+  const art=$('artUrls').value.split('\n').map(s=>s.trim()).filter(s=>/^https?:/i.test(s));
+  const evs=$('evUrls').value.split('\n').map(s=>s.trim()).filter(Boolean).map((l,i)=>{
+    const p=l.split('|').map(s=>s.trim());return{img:/^https?:/i.test(p[0])?p[0]:null,title:p[1]||'Event '+String(i+1).padStart(2,'0'),meta:p[2]||'',href:p[3]||'#'}});
+  if(!hero&&!art.length&&!evs.length)return;
+  CONFIG.hero=/^https?:/i.test(hero)?hero:null;
+  CONFIG.series.forEach(s=>s.images=[]);art.forEach((u,j)=>CONFIG.series[j%CONFIG.series.length].images.push(u));
+  if(evs.length)CONFIG.events=evs;
+  CONFIG.placeholders=!(art.length||evs.length);
+  try{localStorage.setItem('cqcfg2',JSON.stringify(CONFIG))}catch(e){}
+  $('panel').classList.remove('open');build();exTarget=0;play(0);
+};
+$('reset').onclick=()=>{try{localStorage.removeItem('cqcfg2')}catch(e){}location.reload()};
+
+let rz;addEventListener('resize',()=>{clearTimeout(rz);rz=setTimeout(()=>{build();render(raf?curT:TEND)},150)});
+if(CONFIG.tools===false){$('imgs').style.display='none';$('panel').remove()}else fillPanel();
+build();
+if(matchMedia('(prefers-reduced-motion: reduce)').matches)render(TEND);else play(0);
+</script>
+</body>
+</html>
