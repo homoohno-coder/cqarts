@@ -272,30 +272,34 @@ function build(){
     boxes.push(b);
   });
 
-  // art for the front faces of the background bars: shuffled pool of the series images (cached, so reuse is free)
-  const DECOR_ART=44,DECOR_SIDES=70,artPool=[...new Set(CONFIG.series.flatMap(x=>x.images||[]))],rsh=mul(77);
+  // shuffled pool of the series images for the background buildings (cached by URL, so reuse is free)
+  const artPool=[...new Set(CONFIG.series.flatMap(x=>x.images||[]))],rsh=mul(77);
   for(let i=artPool.length-1;i>0;i--){const j=Math.floor(rsh()*(i+1));[artPool[i],artPool[j]]=[artPool[j],artPool[i]]}
-  let decorArt=0,sideArt=0;
+  let artN=0;
   let placed=0,tries=0;const rdc=mul(23);
   while(placed<DECOR&&tries++<2000){
     const w=70+Math.pow(rdc(),1.6)*300,h=70+Math.pow(rdc(),1.6)*300,x=rdc()*(PW-w),y=PH*.04+rdc()*(PH*.94-h);
     if(flightRects.some(q=>x<q[2]&&x+w>q[0]&&y<q[3]&&y+h>q[1]))continue;
     const el=makeBox('div');el.style.setProperty('--sc',SHADES[Math.floor(rdc()*5)]);
     const dfr=el.querySelector('.fr');dfr.style.setProperty('--fc',SHADES[Math.floor(rdc()*5)]);
-    if(decorArt<DECOR_ART&&w>=110&&rdc()<.6&&artPool.length){
-      const u=artPool[decorArt++%artPool.length],dm=document.createElement('div');dm.className='m';
-      const im=new Image();im.referrerPolicy='no-referrer';im.alt='';im.decoding='async';
-      im.onerror=()=>dm.remove();im.src=u;dm.appendChild(im);dfr.appendChild(dm);
-    }
-    // side faces (left/right/top/bottom of each bar) get art too, so work faces every direction
-    for(const sc of ['sl','sr','st','sb']){
-      if(sideArt<DECOR_SIDES&&rdc()<.42&&artPool.length){
-        const sd=el.querySelector('.'+sc);sd.style.backgroundImage='url("'+artPool[(sideArt++*5+3)%artPool.length]+'")';
-        sd.style.backgroundSize='cover';sd.style.backgroundPosition='center';
+    // every building carries art: most faces (top and all four sides) get a different painting, lit like a skyline
+    if(artPool.length){
+      const pick=()=>artPool[(artN++*7+1)%artPool.length];
+      if(rdc()<.9){
+        const u=pick(),dm=document.createElement('div');dm.className='m';
+        const im=new Image();im.referrerPolicy='no-referrer';im.alt='';im.decoding='async';
+        im.onerror=()=>dm.remove();im.src=u;dm.appendChild(im);dfr.appendChild(dm);
+      }
+      const LIT={sl:1.1,sr:.82,st:1.12,sb:.72};
+      for(const sc of ['sl','sr','st','sb']){
+        if(rdc()<.88){
+          const sd=el.querySelector('.'+sc);sd.style.backgroundImage='url("'+pick()+'")';
+          sd.style.backgroundSize='cover';sd.style.backgroundPosition='center';sd.style.filter='brightness('+LIT[sc]+')';
+        }
       }
     }
     heroes.appendChild(el);
-    boxes.push({el,decor:true,d0:30+Math.pow(rdc(),1.4)*190,x,y,w,h});placed++;
+    boxes.push({el,decor:true,d0:50+Math.pow(rdc(),1.25)*330,x,y,w,h});placed++;
   }
 }
 
