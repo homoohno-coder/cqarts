@@ -54,6 +54,16 @@ dialog .stage img{mix-blend-mode:multiply;background:transparent}
 dialog button{background:#f4f2ec}
 @media(max-width:720px){dialog{padding:14px 5% 14px}}
 </style>
+<style id="grid-css">
+.mason,.mason.list{columns:auto!important;display:grid!important;grid-template-columns:repeat(3,1fr)!important;gap:44px 32px!important;align-items:start}
+.mason .work,.mason.list .work{display:block;margin:0!important;break-inside:auto}
+.mason .work img,.mason.list .work img{width:100%!important;height:auto!important;aspect-ratio:1/1;object-fit:contain;object-position:center;padding:0!important;filter:brightness(1.06)}
+.mason .work.x img{object-fit:contain}
+.mason .caption,.mason.list .caption{padding-top:10px;font-size:12px;line-height:1.5;min-height:3em}
+.mason.list{grid-template-columns:repeat(4,1fr)!important;gap:32px 24px!important}
+@media(max-width:1000px){.mason,.mason.list{grid-template-columns:repeat(2,1fr)!important}}
+@media(max-width:720px){.mason,.mason.list{grid-template-columns:repeat(2,1fr)!important;gap:26px 14px!important}}
+</style>
 </head><body>
 <div class="notice">CHRISTINA QUARLES · UNOFFICIAL DESIGN STUDY · NOT THE ARTIST'S OFFICIAL SITE</div>
 <header class="sitehead"><a class="brand" href="/">Christina Quarles</a><nav aria-label="Main menu"><a href="/design-study/#works">Gallery</a><a href="/design-study/#exhibitions">Exhibitions</a><a href="/design-study/#about">About</a><a href="/design-study/cv-archive/">CV &amp; Archive</a><a href="/design-study/#contact">Contact</a></nav></header>
