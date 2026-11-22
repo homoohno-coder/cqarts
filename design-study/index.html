@@ -26,7 +26,7 @@ img{color:var(--ink)}noscript{display:block;padding:40px 4.3%}
 <header><a class="brand" href="../">Christina Quarles</a><nav aria-label="Main menu"><a href="#latest">Latest</a><a href="#works">Gallery</a><a href="#exhibitions">Exhibitions</a><a href="#about">About</a><a href="cv-archive/">CV &amp; Archive</a><a href="#contact">Contact</a></nav></header>
 <main>
 <div class="intro"><h1>Christina<br>Quarles</h1><p>Painting, drawing<br>and the spaces in between.<br><br><a href="#works">Browse the gallery, 2026 – 2017 ↓</a></p></div>
-<section class="latest" id="latest" aria-label="Latest work"><div class="row" id="latestRow"></div></section>
+<section class="latest" id="latest" aria-label="Latest work"><p class="tag"><b>Latest · 2026</b></p><div class="row" id="latestRow"></div></section>
 <section id="works"><div class="section-head"><h2>Gallery · 2026 – 2017</h2><div class="switch"><button id="galleryToggle" class="on" aria-pressed="true">Gallery</button><button id="indexToggle" aria-pressed="false">Index</button></div></div>
 <div class="chips" id="chips" role="group" aria-label="Filter by year"></div>
 <div id="worksGrid"></div>
@@ -55,7 +55,7 @@ $('chips').addEventListener('click',e=>{const b=e.target.closest('button');if(!b
 function setMode(m){mode=m;$('galleryToggle').classList.toggle('on',m==='grid');$('indexToggle').classList.toggle('on',m==='list');$('galleryToggle').setAttribute('aria-pressed',m==='grid');$('indexToggle').setAttribute('aria-pressed',m==='list');render()}
 $('galleryToggle').onclick=()=>setMode('grid');$('indexToggle').onclick=()=>setMode('list');
 // latest 2026
-$('latestRow').innerHTML=ITEMS.map((it,idx)=>[it,idx]).filter(([it])=>it.k==='x'&&it.y===years[0]).map(([it,idx])=>`<div><p class="tag"><b>Latest · ${it.y}</b></p><button type="button" data-i="${idx}" aria-label="Open ${esc(it.t)}"><img src="${esc(it.im[0])}" fetchpriority="high" decoding="async" alt="${esc(it.t)}, ${esc(it.v)}, ${it.y}" onerror="this.closest('div').remove()"></button><div class="caption"><span>${cap(it)}</span><span class="go">${it.im.length} views ↗</span></div></div>`).join('');
+$('latestRow').innerHTML=ITEMS.map((it,idx)=>[it,idx]).filter(([it])=>it.k==='x'&&it.y===years[0]).map(([it,idx])=>`<div><button type="button" data-i="${idx}" aria-label="Open ${esc(it.t)}"><img src="${esc(it.im[0])}" fetchpriority="high" decoding="async" alt="${esc(it.t)}, ${esc(it.v)}, ${it.y}" onerror="this.closest('div').remove()"></button><div class="caption"><span>${cap(it)}</span><span class="go">${it.im.length} views ↗</span></div></div>`).join('');
 // exhibitions list
 $('exList').innerHTML=ITEMS.filter(i=>i.k==='x').map(i=>`<a href="${esc(i.href)}" target="_blank" rel="noopener"><span>${i.y}</span><h3>${esc(i.t)}</h3><span class="venue">${esc(i.v)} · ${esc(i.p)}</span><span>↗</span></a>`).join('');
 // lightbox
