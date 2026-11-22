@@ -1,6 +1,6 @@
 # cqarts
 
-Unofficial design study for Christina Quarles: a flyover of the work that resolves into one painting, with an Explore view of exhibitions.
+Unofficial design study for Christina Quarles: an animated landing page (`index.html`) that enters the Gallery design study (`design-study/`), plus a CV page.
 
 Static site (no build step). Images are loaded from the artist's existing image host; nothing is copied into this repo. Excluded from search engines (robots meta + robots.txt).
 
