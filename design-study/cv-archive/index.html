@@ -1,9 +1,50 @@
 <!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="robots" content="noindex,nofollow"><meta name="description" content="Christina Quarles CV, selected artwork and exhibition references"><title>Christina Quarles — CV & Archive</title>
 <style>
 :root{--paper:#f4f2ec;--ink:#242720;--line:#c9c7bd;--light:#e8e5dc}*{box-sizing:border-box}html{scroll-behavior:smooth}body{margin:0;color:var(--ink);background:var(--paper);font:14px/1.6 Arial,Helvetica,sans-serif}a{color:inherit}header{padding:23px 4.3%;border-bottom:1px solid var(--line);display:flex;align-items:center;justify-content:space-between;gap:15px}header .logo{font-size:22px;text-decoration:none;letter-spacing:-1px}nav{display:flex;gap:20px;flex-wrap:wrap}nav a{text-decoration:none;font-size:12px}.hero{display:grid;grid-template-columns:2fr 1fr;gap:30px;align-items:end;padding:70px 4.3% 90px}.kicker{text-transform:uppercase;letter-spacing:.14em;font-size:11px}h1{font-weight:400;line-height:.92;font-size:clamp(58px,9vw,140px);letter-spacing:-.08em;margin:22px 0 0}.hero p{max-width:290px}.links{display:flex;gap:12px;margin-top:24px;flex-wrap:wrap}.action{display:inline-block;padding:11px 17px;border:1px solid var(--ink);text-decoration:none;font-size:12px}.action.primary{background:var(--ink);color:var(--paper)}section{padding:75px 4.3%}.head{display:flex;justify-content:space-between;border-top:1px solid var(--line);padding-top:20px;margin-bottom:35px;align-items:baseline}.head h2{font-size:clamp(34px,5vw,65px);line-height:1.1;font-weight:400;letter-spacing:-.055em;margin:0}.head span{font-size:11px;text-transform:uppercase;letter-spacing:.14em}.intro{background:var(--light);padding:30px 4.3%;font:clamp(19px,2.2vw,28px)/1.4 Georgia,serif}.refgrid{display:grid;grid-template-columns:repeat(3,1fr);gap:18px}.tile{display:flex;flex-direction:column;justify-content:space-between;gap:40px;min-height:190px;border:1px solid var(--line);padding:22px;text-decoration:none}.tile:hover{background:var(--light)}.tile .label{font-size:11px;text-transform:uppercase;letter-spacing:.12em}.tile h3{font-size:23px;font-weight:400;line-height:1.2;letter-spacing:-.02em;margin:12px 0}.tile small{opacity:.75}.entry{display:grid;grid-template-columns:80px 1.35fr 1fr;gap:20px;border-bottom:1px solid var(--line);padding:25px 0;text-decoration:none;align-items:baseline}.entry h3{font-size:22px;font-weight:400;line-height:1.2;margin:0}.entry .year{font-size:12px}.entry .place{font-size:12px}.more{margin-top:25px}.cvpanel{background:var(--light)}footer{padding:50px 4.3%;background:var(--ink);color:var(--paper)}footer a{display:inline-block;margin-top:16px}.fine{font-size:11px;opacity:.7;margin-top:30px}.notice{background:var(--light);text-align:center;padding:10px;font-size:10px} @media(max-width:730px){header{display:block}nav{margin-top:14px;gap:14px}.hero{display:block;padding:50px 5% 65px}.hero p{margin-top:30px}section{padding:55px 5%}.refgrid{grid-template-columns:1fr}.tile{min-height:135px}.entry{grid-template-columns:58px 1fr}.entry .place{grid-column:2}.head{align-items:center}.head h2{font-size:35px}}
+
+/* Persistent, in-page reference viewer */
+.archive-nav{position:sticky;top:0;z-index:30;background:var(--paper)}
+#referenceViewer{display:none;position:fixed;top:0;right:0;bottom:0;width:62%;z-index:50;background:var(--paper);border-left:1px solid var(--line);box-shadow:-12px 0 40px rgba(30,29,24,.08)}
+body.viewer-open #referenceViewer{display:flex;flex-direction:column}
+body.viewer-open>.notice,body.viewer-open>header,body.viewer-open>main,body.viewer-open>footer{width:38%}
+body.viewer-open .hero{display:block;padding:40px 5% 45px}
+body.viewer-open h1{font-size:clamp(44px,5vw,84px)}
+body.viewer-open .hero p{margin-top:25px}
+body.viewer-open section{padding:38px 5%}
+body.viewer-open .head h2{font-size:clamp(26px,3vw,38px)}
+body.viewer-open .refgrid{grid-template-columns:1fr;gap:9px}
+body.viewer-open .tile{min-height:125px;gap:8px;padding:18px}
+body.viewer-open .tile h3{font-size:19px}
+body.viewer-open .entry{grid-template-columns:60px 1fr;gap:12px}
+body.viewer-open .entry h3{font-size:18px}
+body.viewer-open .entry .place{grid-column:2}
+body.viewer-open .intro{font-size:19px}
+body.viewer-open nav{gap:11px}
+body.viewer-open nav a{font-size:11px}
+body.viewer-open .head{display:block}
+body.viewer-open .head span{display:block;margin-top:6px}
+.reader-bar{min-height:90px;padding:14px 24px 12px;display:flex;align-items:center;gap:20px;justify-content:space-between;border-bottom:1px solid var(--line);background:var(--paper)}
+.reader-title{font:21px/1.2 Georgia,serif;letter-spacing:-.025em;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.reader-meta{font:10px/1.4 Arial,sans-serif;letter-spacing:.09em;text-transform:uppercase;color:#69695f;margin-bottom:5px}
+.reader-actions{display:flex;gap:9px;align-items:center;flex-shrink:0}
+.reader-actions a,.reader-actions button{display:inline-block;border:1px solid var(--ink);padding:9px 13px;background:transparent;color:var(--ink);font:12px Arial,sans-serif;text-decoration:none;white-space:nowrap;cursor:pointer}
+.reader-actions button{background:var(--ink);color:var(--paper)}
+.reader-frame{flex:1;min-height:0;width:100%;border:0;background:#fff}
+.reader-help{margin:0;padding:8px 22px;background:var(--light);font-size:11px;line-height:1.5}
+a.tile.reader-current,a.entry.reader-current{outline:2px solid var(--ink);outline-offset:-2px}
+@media(max-width:960px){
+ body.viewer-open>.notice,body.viewer-open>header,body.viewer-open>main,body.viewer-open>footer{width:auto}
+ #referenceViewer{width:100%;border:0}
+ .reader-bar{padding:10px 13px;min-height:75px;gap:10px}
+ .reader-title{font-size:16px}
+ .reader-actions{gap:6px}
+ .reader-actions a,.reader-actions button{padding:9px 10px;font-size:11px}
+ .reader-help{padding:8px 13px}
+}
+
 </style></head><body>
 <div class="notice">UNOFFICIAL DESIGN STUDY · ARCHIVE LINKS FOR REVIEW</div>
-<header><a class="logo" href="../">Christina Quarles</a><nav><a href="../">Gallery</a><a href="#selected">Selected work</a><a href="#exhibitions">Exhibitions</a><a href="#collections">Collections</a><a href="#press">Press &amp; Film</a><a href="#cv">Full CV</a></nav></header>
+<header class="archive-nav"><a class="logo" href="../">Christina Quarles</a><nav><a href="../">Gallery</a><a href="#selected">Selected work</a><a href="#exhibitions">Exhibitions</a><a href="#collections">Collections</a><a href="#press">Press &amp; Film</a><a href="#cv">Full CV</a></nav></header>
 <main><div class="hero"><div><div class="kicker">Selected work · Exhibitions · Collections · Publications</div><h1>CV &amp;<br>Archive</h1></div><div><p>Explore Christina Quarles’s work through exhibition records, museum collections, artist resources, interviews, and a complete curriculum vitae.</p><div class="links"><a class="action primary" href="../../cv.html">Full CV — October 2026 ↗</a><a class="action" href="https://cq.mymacguy.us/christina-quarles-cv-october-2026.pdf" target="_blank" rel="noopener">PDF ↗</a></div></div></div>
 <div class="intro">An archive intended to connect the artist’s CV with the actual exhibitions, artwork, collections, and published records behind it.</div>
 <section id="selected"><div class="head"><h2>Selected artwork &amp; artist references</h2><span>Explore the work</span></div><div class="refgrid">
@@ -24,4 +65,57 @@
 <section id="collections"><div class="head"><h2>Collections</h2><span>Selected museum resources</span></div><div class="refgrid"><a class="tile" href="https://mcachicago.org/art-artists/collection/never-believe-its-not-so-never-believe-its-not-so/" target="_blank" rel="noopener"><div><div class="label">Collection work</div><h3>Museum of Contemporary Art Chicago</h3></div><small>Explore artwork ↗</small></a><a class="tile" href="https://www.studiomuseum.org/artists/christina-quarles" target="_blank" rel="noopener"><div><div class="label">Artist record</div><h3>The Studio Museum in Harlem</h3></div><small>View artist ↗</small></a><a class="tile" href="https://www.hauserwirth.com/artists/33678-christina-quarles/" target="_blank" rel="noopener"><div><div class="label">Gallery resources</div><h3>Public artworks and exhibitions</h3></div><small>Browse ↗</small></a></div></section>
 <section id="press"><div class="head"><h2>Press, film &amp; writing</h2><span>Selected links</span></div><div class="refgrid"><a class="tile" href="https://unframed.lacma.org/node/4099" target="_blank" rel="noopener"><div><div class="label">Interview / Museum</div><h3>Christina Quarles at LACMA</h3></div><small>Read ↗</small></a><a class="tile" href="https://mcachicago.org/whats-on/exhibitions/christina-quarles/" target="_blank" rel="noopener"><div><div class="label">Exhibition / Media</div><h3>Christina Quarles</h3></div><small>MCA Chicago ↗</small></a><a class="tile" href="https://www.hauserwirth.com/artists/33678-christina-quarles/" target="_blank" rel="noopener"><div><div class="label">Gallery / Videos and publications</div><h3>Artist resources</h3></div><small>Hauser &amp; Wirth ↗</small></a></div></section>
 <section class="cvpanel" id="cv"><div class="head"><h2>Complete CV</h2><span>October 2026</span></div><p>Education, solo exhibitions, group exhibitions, museum collections, bibliographic references and awards.</p><div class="links"><a href="../../cv.html" class="action primary">Read full CV on this site ↗</a><a href="https://cq.mymacguy.us/christina-quarles-cv-october-2026.pdf" class="action" target="_blank" rel="noopener">Open CV PDF ↗</a></div></section>
-</main><footer><a href="../">← Return to gallery</a><div class="fine">Christina Quarles — independent design-study resource. Artwork and names remain with the artist and relevant institutions. External links are provided as references and may change.</div></footer></body></html>
+</main><footer><a href="../">← Return to gallery</a><div class="fine">Christina Quarles — independent design-study resource. Artwork and names remain with the artist and relevant institutions. External links are provided as references and may change.</div></footer>
+<aside id="referenceViewer" role="region" aria-label="Reference viewer" aria-hidden="true">
+  <div class="reader-bar">
+    <div style="min-width:0"><div class="reader-meta">Christina Quarles / CV &amp; Archive / Reference viewer</div><div class="reader-title" id="readerTitle">Reference</div></div>
+    <div class="reader-actions"><a id="readerOriginal" href="#" target="_blank" rel="noopener noreferrer">Open original ↗</a><button type="button" id="readerClose" aria-label="Close reference and return to archive">← Archive</button></div>
+  </div>
+  <iframe class="reader-frame" id="readerFrame" title="Referenced exhibition, artwork or publication" referrerpolicy="no-referrer-when-downgrade" allow="fullscreen"></iframe>
+  <p class="reader-help">Some museums and galleries prevent pages from appearing inside a frame. If this area is blank or shows an error, select <strong>Open original</strong>. The archive remains here.</p>
+</aside>
+<script>
+(() => {
+  const reader = document.getElementById('referenceViewer');
+  const frame = document.getElementById('readerFrame');
+  const title = document.getElementById('readerTitle');
+  const original = document.getElementById('readerOriginal');
+  const close = document.getElementById('readerClose');
+  const archive = document.querySelector('main');
+  let priorFocus = null;
+  let currentLink = null;
+  function hide() {
+    if (!document.body.classList.contains('viewer-open')) return;
+    document.body.classList.remove('viewer-open');
+    reader.setAttribute('aria-hidden','true');
+    frame.removeAttribute('src');
+    if (currentLink) currentLink.classList.remove('reader-current');
+    currentLink = null;
+    if (priorFocus && document.contains(priorFocus)) priorFocus.focus({preventScroll:true});
+  }
+  archive.addEventListener('click', (event) => {
+    const a = event.target.closest('a[href]');
+    if (!a || event.defaultPrevented || event.button !== 0 || event.metaKey || event.ctrlKey || event.shiftKey || event.altKey) return;
+    const href = a.getAttribute('href');
+    if (!href || href.charAt(0)==='#' || /^(mailto:|tel:|javascript:)/i.test(href) || a.hasAttribute('download')) return;
+    let url;
+    try { url = new URL(href, location.href); } catch { return; }
+    if (!['http:','https:'].includes(url.protocol)) return;
+    event.preventDefault();
+    priorFocus = document.activeElement;
+    if (currentLink) currentLink.classList.remove('reader-current');
+    currentLink = a;
+    a.classList.add('reader-current');
+    const h = a.querySelector('h3');
+    title.textContent = h ? h.textContent.trim() : a.textContent.replace(/↗/g,'').trim();
+    original.href = url.href;
+    document.body.classList.add('viewer-open');
+    reader.setAttribute('aria-hidden','false');
+    frame.src = url.href;
+    close.focus({preventScroll:true});
+  });
+  close.addEventListener('click',hide);
+  window.addEventListener('keydown',event=>{if(event.key==='Escape')hide()});
+})();
+</script>
+</body></html>
