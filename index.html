@@ -54,6 +54,7 @@
   @keyframes fadeIn{to{opacity:1}}
   .fade{position:fixed;inset:0;background:#0b0907;opacity:0;pointer-events:none;transition:opacity .9s ease}
   .fade.on{opacity:1;pointer-events:all}
+  @media (max-width:640px){.name{text-shadow:0 2px 24px rgba(0,0,0,.7),0 0 3px rgba(0,0,0,.6)}.enter{text-shadow:0 1px 10px rgba(0,0,0,.8)}.vignette{background:radial-gradient(ellipse at 50% 46%,rgba(8,6,4,.5) 0%,rgba(8,6,4,.25) 45%,rgba(8,6,4,.7) 100%)}}
   @media (prefers-reduced-motion:reduce){
     .hero,.sheen,.floor,.grain,.enter i{animation:none}
     .hero{opacity:1;filter:none}
