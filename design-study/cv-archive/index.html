@@ -104,7 +104,7 @@ a.tile.reader-current,a.entry.reader-current{outline:2px solid var(--ink);outlin
       <div class="reader-divider"></div>
       <p class="reader-description" id="readerDescription">View the original resource for the complete reference.</p>
       <p class="reader-source">Original publisher: <strong id="readerHost">Source website</strong></p>
-      <div class="reader-ctas"><a class="primary" id="readerOpen" href="#" target="_blank" rel="noopener noreferrer">View original source ↗</a><button type="button" id="readerTry">Try opening inside this frame</button></div>
+      <div class="reader-ctas"><a class="primary" id="readerOpen" href="#" target="_blank" rel="noopener noreferrer">View original source ↗</a><button type="button" id="readerTry" hidden>Try opening inside this frame</button></div>
       <p class="reader-fine">This overview stays inside Christina Quarles’s archive. The original article, exhibition page, or museum record is hosted by its publisher and may not permit display inside another website.</p>
     </div>
   </div>
@@ -200,7 +200,7 @@ a.tile.reader-current,a.entry.reader-current{outline:2px solid var(--ink);outlin
     else showOverview();
     close.focus({preventScroll:true});
   });
-  tryFrame.addEventListener('click',showFrame);
+  
   overview.addEventListener('click',showOverview);
   close.addEventListener('click',hide);
   window.addEventListener('keydown',event=>{if(event.key==='Escape')hide()});
