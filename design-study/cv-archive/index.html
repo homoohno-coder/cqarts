@@ -42,6 +42,30 @@ a.tile.reader-current,a.entry.reader-current{outline:2px solid var(--ink);outlin
  .reader-help{padding:8px 13px}
 }
 
+
+/* Archive overview: reliable default for externally blocked websites */
+[hidden]{display:none!important}
+.reader-content{flex:1;min-height:0;overflow-y:auto;background:var(--paper);padding:clamp(24px,5.5vw,88px) clamp(22px,5.5vw,84px) 70px}
+.reader-overview{max-width:820px;margin:0 auto}
+.reader-overline{display:flex;align-items:center;gap:14px;flex-wrap:wrap;font:11px/1.5 Arial,sans-serif;text-transform:uppercase;letter-spacing:.14em;color:#6b6259}
+.reader-year{border:1px solid var(--line);padding:6px 9px}
+.reader-heading{font:400 clamp(34px,4vw,68px)/1.04 Georgia,serif;letter-spacing:-.045em;margin:42px 0 28px;overflow-wrap:break-word}
+.reader-institution{font:16px/1.7 Arial,sans-serif;margin:0 0 36px}
+.reader-divider{height:1px;background:var(--line);margin:34px 0}
+.reader-description{font:17px/1.8 Georgia,serif;color:#4e4d45;max-width:650px;margin:0 0 26px}
+.reader-source{font:12px/1.7 Arial,sans-serif;letter-spacing:.03em;margin:0 0 30px;overflow-wrap:anywhere;color:#68675e}
+.reader-source strong{color:var(--ink);font-weight:500}
+.reader-ctas{display:flex;flex-wrap:wrap;gap:10px;margin-top:24px}
+.reader-ctas a,.reader-ctas button{display:inline-block;min-height:45px;padding:12px 18px;border:1px solid var(--ink);font:12px Arial,sans-serif;background:transparent;color:var(--ink);text-decoration:none;cursor:pointer}
+.reader-ctas .primary{background:var(--ink);color:var(--paper)}
+.reader-fine{font:11px/1.65 Arial,sans-serif;color:#737167;margin-top:35px;max-width:650px}
+.reader-help{display:flex;justify-content:space-between;gap:15px;align-items:center}
+.reader-help button{border:1px solid var(--ink);background:var(--paper);padding:8px 12px;cursor:pointer;font:12px Arial,sans-serif;flex-shrink:0}
+@media(max-width:960px){
+ .reader-content{padding:35px 5% 50px}
+ .reader-heading{font-size:clamp(32px,7vw,58px);margin-top:30px}
+ .reader-description{font-size:16px}
+}
 </style></head><body>
 <div class="notice">UNOFFICIAL DESIGN STUDY · ARCHIVE LINKS FOR REVIEW</div>
 <header class="archive-nav"><a class="logo" href="../">Christina Quarles</a><nav><a href="../">Gallery</a><a href="#selected">Selected work</a><a href="#exhibitions">Exhibitions</a><a href="#collections">Collections</a><a href="#press">Press &amp; Film</a><a href="#cv">Full CV</a></nav></header>
@@ -71,28 +95,72 @@ a.tile.reader-current,a.entry.reader-current{outline:2px solid var(--ink);outlin
     <div style="min-width:0"><div class="reader-meta">Christina Quarles / CV &amp; Archive / Reference viewer</div><div class="reader-title" id="readerTitle">Reference</div></div>
     <div class="reader-actions"><a id="readerOriginal" href="#" target="_blank" rel="noopener noreferrer">Open original ↗</a><button type="button" id="readerClose" aria-label="Close reference and return to archive">← Archive</button></div>
   </div>
-  <iframe class="reader-frame" id="readerFrame" title="Referenced exhibition, artwork or publication" referrerpolicy="no-referrer-when-downgrade" allow="fullscreen"></iframe>
-  <p class="reader-help">Some museums and galleries prevent pages from appearing inside a frame. If this area is blank or shows an error, select <strong>Open original</strong>. The archive remains here.</p>
+
+  <div class="reader-content" id="readerContent" role="document">
+    <div class="reader-overview">
+      <div class="reader-overline"><span id="readerCategory">Archive reference</span><span class="reader-year" id="readerYear" hidden></span></div>
+      <h2 class="reader-heading" id="readerHeading">Selected resource</h2>
+      <p class="reader-institution" id="readerInstitution">Institution</p>
+      <div class="reader-divider"></div>
+      <p class="reader-description" id="readerDescription">View the original resource for the complete reference.</p>
+      <p class="reader-source">Original publisher: <strong id="readerHost">Source website</strong></p>
+      <div class="reader-ctas"><a class="primary" id="readerOpen" href="#" target="_blank" rel="noopener noreferrer">View original source ↗</a><button type="button" id="readerTry">Try opening inside this frame</button></div>
+      <p class="reader-fine">This overview stays inside Christina Quarles’s archive. The original article, exhibition page, or museum record is hosted by its publisher and may not permit display inside another website.</p>
+    </div>
+  </div>
+  <iframe class="reader-frame" id="readerFrame" title="Referenced exhibition, artwork or publication" referrerpolicy="no-referrer-when-downgrade" allow="fullscreen" hidden></iframe>
+  <div class="reader-help" id="readerHelp" hidden><span>Some external websites block embedded viewing. If this page is blank, open the original or return to the overview.</span><button type="button" id="readerOverview">Overview</button></div>
 </aside>
 <script>
 (() => {
   const reader = document.getElementById('referenceViewer');
   const frame = document.getElementById('readerFrame');
+  const content = document.getElementById('readerContent');
+  const help = document.getElementById('readerHelp');
   const title = document.getElementById('readerTitle');
+  const heading = document.getElementById('readerHeading');
+  const category = document.getElementById('readerCategory');
+  const year = document.getElementById('readerYear');
+  const institution = document.getElementById('readerInstitution');
+  const description = document.getElementById('readerDescription');
+  const host = document.getElementById('readerHost');
   const original = document.getElementById('readerOriginal');
+  const openLink = document.getElementById('readerOpen');
   const close = document.getElementById('readerClose');
+  const tryFrame = document.getElementById('readerTry');
+  const overview = document.getElementById('readerOverview');
   const archive = document.querySelector('main');
   let priorFocus = null;
   let currentLink = null;
+
+  function showOverview() {
+    frame.hidden = true;
+    frame.removeAttribute('src');
+    help.hidden = true;
+    content.hidden = false;
+  }
+  function showFrame() {
+    content.hidden = true;
+    help.hidden = false;
+    frame.hidden = false;
+    frame.src = original.href;
+  }
   function hide() {
     if (!document.body.classList.contains('viewer-open')) return;
+    showOverview();
     document.body.classList.remove('viewer-open');
     reader.setAttribute('aria-hidden','true');
-    frame.removeAttribute('src');
     if (currentLink) currentLink.classList.remove('reader-current');
     currentLink = null;
     if (priorFocus && document.contains(priorFocus)) priorFocus.focus({preventScroll:true});
   }
+  const descriptions = {
+    selected: 'This reference is part of the artist’s selected work and institutional resource index. Open the publisher’s website to view its complete artwork photography, credits, and related information.',
+    exhibitions: 'This exhibition is included in Christina Quarles’s selected exhibition chronology. The original listing may contain installation views, accompanying texts, dates and institutional information.',
+    collections: 'This institutional resource is linked from the collection section of Christina Quarles’s archive. Visit the source for its published artwork or artist record and accompanying documentation.',
+    press: 'This entry links to writing, interviews, video or other published material about Christina Quarles. The publisher’s original page provides the complete content.',
+    cv: 'Explore the artist’s complete curriculum vitae, including education, exhibitions, collections, awards and bibliography.'
+  };
   archive.addEventListener('click', (event) => {
     const a = event.target.closest('a[href]');
     if (!a || event.defaultPrevented || event.button !== 0 || event.metaKey || event.ctrlKey || event.shiftKey || event.altKey) return;
@@ -107,15 +175,36 @@ a.tile.reader-current,a.entry.reader-current{outline:2px solid var(--ink);outlin
     currentLink = a;
     a.classList.add('reader-current');
     const h = a.querySelector('h3');
-    title.textContent = h ? h.textContent.trim() : a.textContent.replace(/↗/g,'').trim();
+    const itemTitle = h ? h.textContent.trim() : a.textContent.replace(/↗/g,'').trim();
+    const section = a.closest('section');
+    const kind = section ? section.id : 'selected';
+    const label = a.querySelector('.label');
+    const place = a.querySelector('.place');
+    const small = a.querySelector('small');
+    const yr = a.querySelector('.year');
+    const sourceName = place ? place.textContent.trim() : small ? small.textContent.replace(/↗/g,'').trim() : url.hostname.replace(/^www\./,'');
+    title.textContent = itemTitle;
+    heading.textContent = itemTitle;
+    category.textContent = label ? label.textContent.trim() : (section?.querySelector('.head h2')?.textContent.trim() || 'Curriculum vitae');
+    institution.textContent = sourceName;
+    description.textContent = descriptions[kind] || descriptions.selected;
+    const y = yr?.textContent.trim() || '';
+    year.textContent = y;
+    year.hidden = !y;
+    host.textContent = url.hostname.replace(/^www\./,'');
     original.href = url.href;
+    openLink.href = url.href;
     document.body.classList.add('viewer-open');
     reader.setAttribute('aria-hidden','false');
-    frame.src = url.href;
+    if (url.origin === location.origin && /\.html(?:$|[?#])/i.test(url.href)) showFrame();
+    else showOverview();
     close.focus({preventScroll:true});
   });
+  tryFrame.addEventListener('click',showFrame);
+  overview.addEventListener('click',showOverview);
   close.addEventListener('click',hide);
   window.addEventListener('keydown',event=>{if(event.key==='Escape')hide()});
 })();
 </script>
+
 </body></html>
