@@ -104,7 +104,7 @@ a.tile.reader-current,a.entry.reader-current{outline:2px solid var(--ink);outlin
       <div class="reader-divider"></div>
       <p class="reader-description" id="readerDescription">View the original resource for the complete reference.</p>
       <p class="reader-source">Original publisher: <strong id="readerHost">Source website</strong></p>
-      <div class="reader-ctas"><a class="primary" id="readerOpen" href="#" target="_blank" rel="noopener noreferrer">View original source ↗</a><button type="button" id="readerTry" hidden>Try opening inside this frame</button></div>
+      <div class="reader-ctas"><a class="primary" id="readerOpen" href="#" target="_blank" rel="noopener noreferrer">View original source ↗</a></div>
       <p class="reader-fine">This overview stays inside Christina Quarles’s archive. The original article, exhibition page, or museum record is hosted by its publisher and may not permit display inside another website.</p>
     </div>
   </div>
@@ -127,7 +127,7 @@ a.tile.reader-current,a.entry.reader-current{outline:2px solid var(--ink);outlin
   const original = document.getElementById('readerOriginal');
   const openLink = document.getElementById('readerOpen');
   const close = document.getElementById('readerClose');
-  const tryFrame = document.getElementById('readerTry');
+  
   const overview = document.getElementById('readerOverview');
   const archive = document.querySelector('main');
   let priorFocus = null;
