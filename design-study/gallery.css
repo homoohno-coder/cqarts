@@ -74,3 +74,71 @@ header.sitehead nav { font-size: .875rem; }
   .hero-works, #viewer { transition: none; }
   .art-reveal { animation: none; }
 }
+
+/* A single white surface throughout the gallery and expanded view. */
+:root { --paper: #fff; --tile: #fff; }
+html, header.sitehead, .notice, .bio, footer, #viewer, #viewer::backdrop { background: #fff; }
+footer { color: var(--ink); }
+.hero-works, #viewer { background: #fff; color: var(--ink); }
+.feature-stage { height: clamp(17rem, 72svh, 72rem); }
+.feature-meta .caption { display: block; }
+.feature .feature-image[hidden], .art-window[hidden], .viewer-arrow[hidden] { display: none; }
+.art-fit {
+  display: grid;
+  place-items: center;
+  width: 100%;
+  height: 100%;
+  container-type: size;
+}
+.art-window {
+  position: relative;
+  display: block;
+  width: min(100cqw, calc(100cqh * var(--art-ratio)));
+  aspect-ratio: var(--art-ratio);
+  overflow: hidden;
+  box-shadow: 0 1px 0 rgba(0, 0, 0, .22), 0 3px 5px rgba(0, 0, 0, .1);
+}
+.feature .feature-image .art-window img, #viewer .art-window img {
+  position: absolute;
+  top: var(--photo-top);
+  left: var(--photo-left);
+  width: var(--photo-width);
+  height: auto;
+  max-width: none;
+  max-height: none;
+}
+#viewer .top { justify-content: flex-end; margin: 0; }
+#viewer #close { border: 0; }
+#viewer .stage { padding-inline: 3.5rem; }
+#viewer .viewer-arrow {
+  position: absolute;
+  top: 50%;
+  width: 3.25rem;
+  height: 3.5rem;
+  padding: 0;
+  transform: translateY(-50%);
+  border: 0;
+  display: grid;
+  place-items: center;
+}
+#viewer .viewer-arrow[hidden] { display: none; }
+#viewer .viewer-arrow::before {
+  content: "";
+  width: .95rem;
+  height: .95rem;
+  border: solid currentColor;
+  border-width: 0 2.5px 2.5px 0;
+  transform: rotate(-45deg);
+}
+#viewer .viewer-arrow:hover { opacity: .62; }
+#viewer #prev { left: 0; }
+#viewer #prev::before { transform: rotate(135deg); }
+#viewer #next { right: 0; }
+#viewer .bar { align-items: end; }
+#viewer #count { font-size: .8rem; white-space: nowrap; }
+@media (max-width: 720px) {
+  .feature-stage { height: min(115vw, 65svh); }
+  #viewer .stage { padding-inline: 2.75rem; }
+  #viewer .viewer-arrow { width: 2.75rem; min-height: 44px; }
+  #viewer .viewer-arrow::before { width: .75rem; height: .75rem; }
+}
