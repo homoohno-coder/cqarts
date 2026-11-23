@@ -1,0 +1,76 @@
+:root {
+  --paper: #f4f2ec;
+  --ink: #242720;
+  --gallery-type: system-ui, -apple-system, "Segoe UI", sans-serif;
+}
+body, header.sitehead, header.sitehead nav { font-family: var(--gallery-type); }
+.notice, .bio { background: var(--paper); }
+header.sitehead { border-bottom: 0; }
+header.sitehead nav { font-size: .875rem; }
+.hero-works, #viewer {
+  background: var(--art-ground, var(--paper));
+  color: var(--art-ink, var(--ink));
+  transition: background-color 420ms ease;
+}
+.hero-works { padding: 1rem clamp(1rem, 4vw, 4rem) 1.5rem; }
+.hero-works .row1 { margin-bottom: .5rem; }
+.hero-works h1 { font-size: .95rem; letter-spacing: 0; }
+.hero-works .label { font-size: .8rem; letter-spacing: 0; text-transform: none; }
+.feature { display: block; overflow: visible; padding: 0; }
+.feature-stage {
+  display: grid;
+  place-items: center;
+  grid-template: minmax(0, 1fr) / minmax(0, 1fr);
+  height: clamp(17rem, 67svh, 65rem);
+}
+.feature .feature-image { width: 100%; height: 100%; min-height: 0; }
+.feature .feature-image img {
+  width: 100%;
+  height: 100%;
+  max-width: none;
+  object-fit: contain;
+}
+.feature-meta {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: .5rem 1.5rem;
+  flex-wrap: wrap;
+  min-height: 3.5rem;
+}
+.feature-meta .caption { padding: 0; font-size: .9rem; }
+.feature-controls { display: flex; gap: .5rem; }
+.feature-controls button, #viewer button {
+  background: transparent;
+  border: 0;
+  color: inherit;
+  min-height: 44px;
+  padding: .45rem .75rem;
+}
+.feature-controls button:hover, #viewer button:hover { text-decoration: underline; }
+.hero-works :focus-visible, #viewer :focus-visible, .work button:focus-visible {
+  outline: 2px solid currentColor;
+  outline-offset: 4px;
+}
+.feature img, #viewer img, .mason .work img, .strip img {
+  mix-blend-mode: normal;
+  filter: none;
+}
+.mason .work img, .mason.list .work img { aspect-ratio: auto; filter: none; }
+.mason:not(.list) .work.wide { grid-column: span 2; }
+#viewer[open] { display: grid; grid-template-rows: auto minmax(0, 1fr) auto; gap: .5rem; }
+#viewer .stage { height: 100%; min-height: 0; }
+#viewer .stage img { height: 100%; }
+.art-reveal { animation: art-reveal 420ms ease both; }
+@keyframes art-reveal { from { opacity: .35; } to { opacity: 1; } }
+.artist-portrait { margin: .5rem 0 0; }
+.artist-portrait img { display: block; width: min(100%, 15rem); height: auto; }
+@media (max-width: 720px) {
+  .feature-stage { height: min(115vw, 63svh); }
+  .mason:not(.list) { grid-template-columns: 1fr !important; }
+  .mason:not(.list) .work.wide { grid-column: auto; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .hero-works, #viewer { transition: none; }
+  .art-reveal { animation: none; }
+}
