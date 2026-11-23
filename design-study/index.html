@@ -64,12 +64,12 @@ dialog button{background:#f4f2ec}
 @media(max-width:1000px){.mason,.mason.list{grid-template-columns:repeat(2,1fr)!important}}
 @media(max-width:720px){.mason,.mason.list{grid-template-columns:repeat(2,1fr)!important;gap:26px 14px!important}}
 </style>
-<link rel="stylesheet" href="gallery.css?v=white-viewer-2">
+<link rel="stylesheet" href="gallery.css?v=uniform-artworks">
 </head><body>
 <div class="notice">CHRISTINA QUARLES · UNOFFICIAL DESIGN STUDY · NOT THE ARTIST'S OFFICIAL SITE</div>
 <header class="sitehead"><a class="brand" href="/">Christina Quarles</a><nav aria-label="Main menu"><a href="/design-study/#works">Gallery</a><a href="/design-study/#exhibitions">Exhibitions</a><a href="/design-study/#about">About</a><a href="/design-study/cv-archive/">CV &amp; Archive</a><a href="/design-study/#contact">Contact</a></nav></header>
 <main>
-<section class="hero-works" id="latest" aria-label="Selected work"><div class="row1"><h1>Selected paintings</h1><a href="#exhibitions" class="label" style="text-decoration:underline;text-underline-offset:4px">Exhibitions ↓</a></div><div class="feature" id="feature">
+<section class="hero-works" id="latest" aria-label="Selected work"><div class="row1"><h1>Selected paintings</h1></div><div class="feature" id="feature">
   <div class="feature-stage"><button type="button" class="feature-image" id="featureImage" aria-haspopup="dialog" hidden></button></div>
   <div class="feature-meta"><div class="caption" id="featureCaption" aria-live="polite"></div><div class="feature-controls" aria-label="Featured paintings"><button id="featurePrev" type="button">Previous</button><button id="featureNext" type="button">Next</button></div></div>
 </div></section>
@@ -101,25 +101,16 @@ let mode='grid',yr='all';
 const cap=w=>`<em>${esc(w.t)}</em><br>${w.y}${w.m?' · '+esc(w.m):''}`;
 window.imgFail=function(img){let fb=[];try{fb=JSON.parse(img.dataset.fb||'[]')}catch(e){}const n=fb.shift();if(n){img.dataset.fb=JSON.stringify(fb);img.src=n}else{const a=img.closest('.work,.fw,.strip button');if(a)a.remove()}};
 const fbAttr=w=>esc(JSON.stringify(w.fb||[]));
-function tile(w,idx){return `<article class="work"><button type="button" data-w="${idx}" aria-label="Open ${esc(w.t)}"><img src="${esc(w.im[0])}" data-fb="${fbAttr(w)}" loading="lazy" decoding="async" onload="this.closest('.work').classList.toggle('wide',this.naturalWidth>1.18*this.naturalHeight)" alt="${esc(w.t)}, ${w.y}" onerror="imgFail(this)"></button><div class="caption"><span>${cap(w)}</span></div></article>`}
+function tile(w,idx){return `<article class="work"><button type="button" data-w="${idx}" aria-label="Open ${esc(w.t)}"><img src="${esc(w.im[0])}" data-fb="${fbAttr(w)}" loading="lazy" decoding="async" data-photo="${esc(w.im[0])}" onload="fitThumbnail(this)" alt="${esc(w.t)}, ${w.y}" onerror="imgFail(this)"></button><div class="caption"><span>${cap(w)}</span></div></article>`}
 function render(){const g=$('worksGrid');g.innerHTML='';(yr==='all'?years:[+yr]).forEach(y=>{const its=W.map((w,i)=>[w,i]).filter(([w])=>w.y===y);if(!its.length)return;const d=document.createElement('div');d.innerHTML=`<div class="year"><h3>${y}</h3><span>${its.length} work${its.length>1?'s':''}</span></div><div class="mason ${mode==='list'?'grid list':''}">${its.map(([w,i])=>tile(w,i)).join('')}</div>`;g.appendChild(d)})}
 $('chips').innerHTML=['all',...years].map(y=>`<button type="button" data-y="${y}" class="${y==='all'?'on':''}">${y==='all'?'All years':y}</button>`).join('');
 $('chips').addEventListener('click',e=>{const b=e.target.closest('button');if(!b)return;yr=b.dataset.y;[...$('chips').children].forEach(c=>c.classList.toggle('on',c===b));render()});
 function setMode(m){mode=m;$('galleryToggle').classList.toggle('on',m==='grid');$('indexToggle').classList.toggle('on',m==='list');$('galleryToggle').setAttribute('aria-pressed',m==='grid');$('indexToggle').setAttribute('aria-pressed',m==='list');render()}
 $('galleryToggle').onclick=()=>setMode('grid');$('indexToggle').onclick=()=>setMode('list');
-// Normalized display bounds for the featured source photographs, with a small margin
-// outside the canvas. Keep original image URLs and avoid trimming unsurveyed images.
-const photoBounds = [
-  [1200, 889, 64, 152, 1136, 736],
-  [1200, 889, 68, 174, 1132, 714],
-  [889, 1200, 62, 167, 826, 1034],
-  [889, 1200, 62, 132, 828, 1067],
-  [474, 640, 27, 99, 447, 540],
-  [2600, 1950, 195, 77, 2386, 1885],
-  [640, 480, 70, 27, 570, 440],
-  [482, 640, 35, 50, 446, 607]
-];
-const boundsByImage = new Map(photoBounds.map((bounds, index) => [W[index].im[0], bounds]));
+// Display bounds for source photographs with a measurable neutral surround.
+// Keep original image URLs and leave ambiguous photographs whole.
+const photoBounds = {"27":[1400,1226,81,81,1327,1163],"23":[1400,1602,84,88,1316,1536],"79":[2000,1333,284,148,1712,1276],"3":[889,1200,62,132,828,1067],"2":[889,1200,62,167,826,1034],"78":[2000,1333,360,144,1728,1272],"0":[1200,889,64,152,1136,736],"1":[1200,889,68,174,1132,714],"80":[2000,1333,264,132,1780,1308],"5":[2600,1950,195,77,2386,1885],"4":[474,640,27,99,447,540],"81":[2000,1333,256,84,1780,1308],"6":[640,480,70,27,570,440],"7":[482,640,35,50,446,607],"82":[2000,1333,260,84,1772,1300],"9":[482,640,38,54,446,606],"73":[2000,1333,284,152,1712,1280],"8":[482,640,38,54,446,606],"76":[2000,1333,272,136,1720,1276],"77":[2000,1333,280,152,1740,1280],"75":[2000,1333,276,144,1732,1272],"48":[1400,1600,216,208,1188,1392],"74":[2000,1333,296,152,1668,1272],"10":[483,640,38,54,450,606],"11":[1400,1050,150,66,1262,974],"15":[1400,1152,69,69,1335,1103],"16":[1400,1050,150,166,1270,874]};
+const boundsByImage = new Map(Object.entries(photoBounds).map(([index, bounds]) => [W[index].im[0], bounds]));
 
 function fitPhoto(frame, image, originalSource) {
   const width = image.naturalWidth;
@@ -140,6 +131,22 @@ function fitPhoto(frame, image, originalSource) {
   frame.style.setProperty('--photo-width', `${zoom * 100}%`);
   frame.style.setProperty('--photo-left', `${left * 100}%`);
   frame.style.setProperty('--photo-top', `${top * 100}%`);
+}
+
+function fitThumbnail(image) {
+  const source = image.dataset.photo;
+  let frame = image.parentElement;
+  if (!frame.classList.contains('art-window')) {
+    if (!boundsByImage.has(source)) return;
+    const fit = document.createElement('span');
+    fit.className = 'art-fit';
+    frame = document.createElement('span');
+    frame.className = 'art-window';
+    fit.append(frame);
+    image.before(fit);
+    frame.append(image);
+  }
+  fitPhoto(frame, image, source);
 }
 
 const featuredWorks = W.map((work, index) => ({work, index}))
@@ -190,7 +197,7 @@ function setFromWorks(ws){return ws.map(w=>({src:w.im[0],fb:w.fb||[],t:w.t,cap:c
 function setFromInst(e){return e.im.map((s,i)=>({src:s,fb:[],t:e.t,cap:`<em>${esc(e.t)}</em><br>${esc(e.v)} · ${esc(e.p)} · ${e.y}<br>Installation view ${i+1}`}))}
 $('exList').innerHTML=EX.map((e,n)=>{let ws=e.key?W.filter(w=>w.ex===e.key):[],note='';if(!ws.length){ws=W.filter(w=>w.y===e.y&&!w.ex);if(ws.length)note=`Works from ${e.y}`}else note='Works in this exhibition';
  const wi=SETS.push(setFromWorks(ws))-1,ii=SETS.push(setFromInst(e))-1;const max=12,shown=ws.slice(0,max);
- const strip=shown.length?`<div class="strip">${shown.map((w,i)=>`<button type="button" data-s="${wi}" data-p="${i}" aria-label="Open ${esc(w.t)}"><img src="${esc(w.im[0])}" data-fb="${fbAttr(w)}" loading="lazy" decoding="async" alt="${esc(w.t)}" onerror="imgFail(this)"></button>`).join('')}${ws.length>max?`<button type="button" class="more" data-s="${wi}" data-p="${max}">+${ws.length-max} more</button>`:''}</div>`:`<div class="strip">${e.im.slice(0,6).map((s,i)=>`<button type="button" data-s="${ii}" data-p="${i}" aria-label="Installation view ${i+1}"><img src="${esc(s)}" loading="lazy" decoding="async" alt="${esc(e.t)}, installation view" onerror="this.closest('button').remove()"></button>`).join('')}</div>`;
+ const strip=shown.length?`<div class="strip">${shown.map((w,i)=>`<button type="button" data-s="${wi}" data-p="${i}" aria-label="Open ${esc(w.t)}"><img src="${esc(w.im[0])}" data-fb="${fbAttr(w)}" loading="lazy" decoding="async" data-photo="${esc(w.im[0])}" onload="fitThumbnail(this)" alt="${esc(w.t)}" onerror="imgFail(this)"></button>`).join('')}${ws.length>max?`<button type="button" class="more" data-s="${wi}" data-p="${max}">+${ws.length-max} more</button>`:''}</div>`:`<div class="strip">${e.im.slice(0,6).map((s,i)=>`<button type="button" data-s="${ii}" data-p="${i}" aria-label="Installation view ${i+1}"><img src="${esc(s)}" loading="lazy" decoding="async" alt="${esc(e.t)}, installation view" onerror="this.closest('button').remove()"></button>`).join('')}</div>`;
  return `<article class="exb"><a class="exh" href="${esc(e.href)}" target="_blank" rel="noopener"><span>${e.y}</span><h3>${esc(e.t)}</h3><span class="venue">${esc(e.v)} · ${esc(e.p)}</span><span>↗</span></a>${strip}<div class="exmeta">${shown.length?`<span class="note">${note}</span>`:`<span class="note">Installation views</span>`}${shown.length?`<button type="button" data-s="${ii}" data-p="0">Installation views (${e.im.length})</button>`:''}</div></article>`}).join('');
 // lightbox
 const dlg=$('viewer'),big=$('large');let cur=[],pos=0;

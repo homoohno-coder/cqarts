@@ -142,3 +142,36 @@ footer { color: var(--ink); }
   #viewer .viewer-arrow { width: 2.75rem; min-height: 44px; }
   #viewer .viewer-arrow::before { width: .75rem; height: .75rem; }
 }
+
+/* Equal viewing slots keep rows consistent across mixed canvas proportions. */
+.mason .work button, .mason.list .work button {
+  aspect-ratio: 5 / 4;
+  display: grid;
+  place-items: center;
+}
+.mason .work button > img, .mason.list .work button > img {
+  width: 100% !important;
+  height: 100% !important;
+  object-fit: contain;
+}
+.mason .work .art-window img, .mason.list .work .art-window img, .strip .art-window img {
+  position: absolute;
+  top: var(--photo-top);
+  left: var(--photo-left);
+  width: var(--photo-width) !important;
+  height: auto !important;
+  max-width: none;
+}
+.mason .work button, .mason.list .work button, .strip button:not(.more) {
+  grid-template: minmax(0, 1fr) / minmax(0, 1fr);
+}
+.strip {
+  display: grid;
+  grid-auto-flow: column;
+  grid-auto-columns: clamp(8rem, 15vw, 13rem);
+  align-items: start;
+  padding-bottom: .75rem;
+}
+.strip button:not(.more) { aspect-ratio: 5 / 4; display: grid; place-items: center; }
+.strip button > img { width: 100%; height: 100%; object-fit: contain; }
+.strip .more { width: 100%; height: auto; aspect-ratio: 5 / 4; }
