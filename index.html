@@ -105,7 +105,7 @@
 <main class="stage" id="stage">
   <header class="top"><a class="brand" href="./">Christina Quarles</a><details><summary>Menu</summary><div class="menu"><img src="media/gallery-still.jpg" alt=""><nav aria-label="Site"><a href="design-study/#works">Gallery</a><a href="design-study/#exhibitions">Exhibitions</a><a href="design-study/#about">About the artist</a><a href="design-study/cv-archive/">CV &amp; Archive</a></nav></div></details></header>
   <div class="hero" role="img" aria-label="Visitors in a circular gallery surrounded by large paintings by Christina Quarles"></div>
-  <video class="loop" id="ambient" muted playsinline loop preload="none" poster="media/gallery-still.jpg" data-src="media/gallery-loop.mp4" aria-hidden="true"></video>
+  <video class="loop" id="ambient" muted playsinline loop preload="none" poster="media/gallery-still.jpg" data-src="media/gallery-loop-1080.mp4" data-src-hd="media/gallery-loop-1440.mp4" aria-hidden="true"></video>
   <div class="sheen"></div><div class="floor"></div><div class="vignette"></div><div class="grain"></div>
   <div class="center">
     <a class="name" id="enter" href="design-study/" aria-label="Enter the Christina Quarles site"><span>Christina</span><span>Quarles</span></a>
@@ -141,7 +141,11 @@
   let paused = false;
   function ambience() {
     if (paused || reduced.matches) { ambient.pause(); return; }
-    if (!ambient.getAttribute('src')) ambient.src = ambient.dataset.src;
+    if (!ambient.getAttribute('src')) {
+      // 1440p only where the screen needs it (big iPads, 1440p and 4K monitors); 1080p everywhere else.
+      const px = Math.max(screen.width, screen.height) * (devicePixelRatio || 1);
+      ambient.src = px > 2200 ? ambient.dataset.srcHd : ambient.dataset.src;
+    }
     ambient.play().catch(() => { paused = true; motion.textContent = 'Play motion'; });
   }
   ambient.addEventListener('playing', () => stage.classList.add('video-on'));
