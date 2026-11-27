@@ -175,3 +175,15 @@ footer { color: var(--ink); }
 .strip button:not(.more) { aspect-ratio: 5 / 4; display: grid; place-items: center; }
 .strip button > img { width: 100%; height: 100%; object-fit: contain; }
 .strip .more { width: 100%; height: auto; aspect-ratio: 5 / 4; }
+
+/* Equal visual size: every work occupies the same area inside its slot, whatever its proportions.
+   Nothing is cropped; wide works are capped by the slot width, tall works by its height. */
+.mason .work button > img.eq, .strip button > img.eq {
+  width: calc(100% * min(1, sqrt(var(--art-ratio) * .496), var(--art-ratio) * .8)) !important;
+  height: auto !important;
+  aspect-ratio: var(--art-ratio);
+  object-fit: contain;
+}
+.mason .art-window, .strip .art-window {
+  width: min(100cqw, 100cqh * var(--art-ratio), 100cqw * sqrt(var(--art-ratio) * .496));
+}
